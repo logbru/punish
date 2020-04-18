@@ -10,7 +10,13 @@ Order.init({
   leagueQueue: INTEGER,
   desiredTier: STRING,
   desiredDivision: STRING,
-  customChampions: STRING
+  customChampions: STRING,
+  clientIp: STRING,
+  midLane: INTEGER,
+  topLane: INTEGER,
+  marksman: INTEGER,
+  jungle: INTEGER,
+  support: INTEGER
 }, { sequelize: require('../config'), modelName: 'order' })
 
 module.exports = Order

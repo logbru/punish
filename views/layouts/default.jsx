@@ -8,6 +8,7 @@ const Html = props => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Punish</title>
         <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="./assets/css/switch.css" />
         <link rel="stylesheet" href="./assets/css/style.css" />
       </head>
 
@@ -25,6 +26,7 @@ const Html = props => {
           crossOrigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
         <script src="./assets/js/typeahead.js"></script>
+        <script src="./assets/js/switch.js"></script>
           <script src="./assets/js/boost.js"></script>
       </body>
     </html>

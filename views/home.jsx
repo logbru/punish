@@ -62,7 +62,7 @@ const Home = props => {
         </div>
         <div className="row mt-5">
           <div className="col-12">
-            <div className="card border-secondary mb-3">
+            <div className="card border-primary mb-3">
               <div className="card-header">Account</div>
               <div className="card-body">
                 {/* <h4 className="card-title">Primary card title</h4> */}
@@ -128,32 +128,35 @@ const Home = props => {
             </div>
           </div>
         </div>
-        <div className="row mt-3">
-          <div className="col-12">
-            <div className="card border-secondary mb-3">
+        <div className="row mt-3 ">
+          <div className="col-sm-4">
+            <div className="card border-primary mb-3 maincard">
               <div className="card-header">Type</div>
               <div className="card-body">
-                {/* Content */}
-                <div className="btn-group btn-group-toggle mt-4 ml-5" data-toggle="buttons">
-                  <label className="btn btn-primary">
-                    <input type="radio" name="options" id="winsBoost" autocomplete="off" checked /> Ranked Wins Boost
+                <div className="row">
+                  <div className="col-12">
+                    <div className="btn-group btn-group-toggle mt-2 ml-4" data-toggle="buttons">
+                      <label className="btn btn-primary">
+                        <input type="radio" name="options" id="winsBoost" autocomplete="off" checked /> Ranked Wins Boost
                           </label>
-                  <label className="btn btn-primary">
-                    <input type="radio" name="options" id="leagueBoost" autocomplete="off" /> League Boost
+                      <label className="btn btn-primary">
+                        <input type="radio" name="options" id="leagueBoost" autocomplete="off" /> Division Boost
                           </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="col-12">
-            <div className="card border-secondary mb-3">
+          <div className="col-sm-4">
+            <div className="card border-primary mb-3 maincard">
               <div className="card-header">Options</div>
               <div className="card-body">
                 {/* Content */}
                 <div id="wins">
                   <div className="row">
-                    <div className="col-sm-6">
-                      <div className="btn-group btn-group-toggle mt-4 ml-5" data-toggle="buttons">
+                    <div className="col-12">
+                      <div className="btn-group btn-group-toggle mb-4" data-toggle="buttons">
                         <label className="btn btn-primary">
                           <input type="radio" name="options" id="soloWins" autocomplete="off" checked /> Solo/Duo
                                 </label>
@@ -162,7 +165,7 @@ const Home = props => {
                                 </label>
                       </div>
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-12">
                       <form>
                         <fieldset className="form-group">
                           <span><legend className="text-muted">Number of Wins: <span id="winCount" className="badge badge-success ml-5">1</span></legend> </span>
@@ -174,8 +177,8 @@ const Home = props => {
                 </div>
                 <div id="league">
                   <div className="row">
-                    <div className="col-sm-6">
-                      <div className="btn-group btn-group-toggle mt-4 ml-5" data-toggle="buttons">
+                    <div className="col-12">
+                      <div className="btn-group btn-group-toggle mb-4" data-toggle="buttons">
                         <label className="btn btn-primary">
                           <input type="radio" name="options" id="soloLeague" autocomplete="off" checked /> Solo/Duo
                                 </label>
@@ -184,26 +187,18 @@ const Home = props => {
                                 </label>
                       </div>
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-12">
                       <form>
                         <div className="form-group">
                           <label for="desiredTier">Desired Tier</label>
                           <select className="form-control" id="desiredTier">
-                            {/* <option value="Iron">Iron</option>
-                            <option value="Bronze">Bronze</option>
-                            <option value="Silver">Silver</option>
-                            <option value="Gold">Gold</option>
-                            <option value="Platinum">Platinum</option>
-                            <option value="Diamond">Diamond</option> */}
+
                           </select>
                         </div>
                         <div className="form-group">
-                          <label for="desiredDivision">Desired Division</label>
+                          <label for="desiredDivision" id="divLabel">Desired Division</label>
                           <select className="form-control" id="desiredDivision">
-                            {/* <option value="IV">Divisin IV</option>
-                            <option value="III">Division III</option>
-                            <option value="II">Division II</option>
-                            <option value="I">Division I</option> */}
+
                           </select>
                         </div>
                       </form>
@@ -213,8 +208,8 @@ const Home = props => {
               </div>
             </div>
           </div>
-          <div className="col-12">
-            <div className="card border-secondary mb-3">
+          <div className="col-sm-4">
+            <div className="card border-primary mb-3 maincard">
               <div className="card-header">Price</div>
               <div className="card-body">
                 {/* Content */}
@@ -241,41 +236,68 @@ const Home = props => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div className="modal" id="selectChampionsModal">
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Select Custom Champions</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div className="modal-body">
-              <div className="row">
-                <div className="col-12">
-                  <form>
-                    <div className="form-group">
-                      <label htmlFor="champSearch">Search for champions</label>
-                      <input type="text" className="form-control ml-5" id="champSearch" placeholder="Enter champion name" />
+          <div className="col-12" id="cChamps">
+            <div className="card border-primary mb-3">
+              <div className="card-header">Custom Champions and Roles</div>
+              <div className="card-body">
+                {/* Content */}
+                <div className="row">
+                  <div className="col-12">
+                    <h4 className="text-muted mt-3">Select Roles</h4>
+                    <hr className="my-4" />
+                    <div className="row">
+                      <div className="col-sm-1"></div>
+                      <div className="col-sm-2 text-center">
+                        <h5 className="text-muted">Top Lane</h5>
+                        <img src="./assets/images/top.png" alt="Top Lane" className="img-thumbnail thumb mb-3"/>
+                        <input type="checkbox" id="toplane"/>
+                      </div>
+                      <div className="col-sm-2 text-center">
+                        <h5 className="text-muted">Mid Lane</h5>
+                        <img src="./assets/images/mid.png" alt="Mid Lane" className="img-thumbnail thumb mb-3" />
+                        <input type="checkbox" id="midlane" />
+                      </div>
+                      <div className="col-sm-2 text-center">
+                        <h5 className="text-muted">Marksman</h5>
+                        <img src="./assets/images/marksman.png" alt="Marksman" className="img-thumbnail thumb mb-3" />
+                        <input type="checkbox" id="marksman" />
+                      </div>
+                      <div className="col-sm-2 text-center">
+                        <h5 className="text-muted">Jungle</h5>
+                        <img src="./assets/images/jungle.png" alt="Jungle" className="img-thumbnail thumb mb-3" />
+                        <input type="checkbox" id="jungle" />
+                      </div>
+                      <div className="col-sm-2 text-center">
+                        <h5 className="text-muted">Support</h5>
+                        <img src="./assets/images/suport.png" alt="Support" className="img-thumbnail thumb mb-3" />
+                        <input type="checkbox" id="support" />
+                      </div>
+                      <div className="col-sm-1">
+                      </div>
                     </div>
-                  </form>
+                  </div>
                 </div>
-              </div>
-              <div className="row">
-                <div className="col-12 mx-auto">
-                  <h4 className="text-muted mt-3">Selected Champions</h4>
-                  <hr className="my-4"/>
-                  <div className="row" id="championStream">
-                    
+                <hr className="my-4" />
+                <div className="row">
+                  <div className="col-12">
+                    <form>
+                      <div className="form-group">
+                        <label htmlFor="champSearch">Select Champions</label>
+                        <input type="text" className="form-control ml-5" id="champSearch" placeholder="Enter champion name" />
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-12 mx-auto">
+                    <h4 className="text-muted mt-3">Selected Champions</h4>
+                    <hr className="my-4" />
+                    <div className="row" id="championStream">
+
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-primary" id="sccSubmit">Boost Me</button>
-              <button type="button" className="btn btn-secondary" data-dismiss="modal" id="sccCancel">Cancel</button>
             </div>
           </div>
         </div>
@@ -298,11 +320,6 @@ const Home = props => {
           </div>
         </div>
       </div>
-      <footer className="footer mt-5">
-        <div className="container">
-          <span className="text-muted">Place sticky footer content here.</span>
-        </div>
-      </footer>
     </Html >
   )
 }

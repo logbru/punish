@@ -12,7 +12,8 @@ let tierOptions = [
   '<option value="Silver">Silver</option>',
   '<option value="Gold">Gold</option>',
   '<option value="Platinum">Platinum</option>',
-  '<option value="Diamond">Diamond</option>'
+  '<option value="Diamond">Diamond</option>',
+  '<option value="Master">Master</option>'
 ]
 let divisionOptions = [
   '<option value="IV">Divisin IV</option>',
@@ -193,6 +194,15 @@ function getCurrentTierChar(tier, division) {
           return 'i1'
           break
       }
+      break
+    case 'MASTER':
+      return 'none'
+      break
+    case 'GRANDMASTER':
+      return 'none'
+      break
+    case 'CHALLENGER':
+      return 'none'
       break
   }
 }
@@ -479,6 +489,11 @@ function calculatePrice(data) {
 }
 function getFormOptions() {
   let customChampions
+  let toplane = 0
+  let midlane = 0
+  let marksman = 0
+  let jungle = 0
+  let support = 0
 
   // Get order type
   let orderType
@@ -503,8 +518,26 @@ function getFormOptions() {
   } else {
     leagueQueue = 2
   }
-
-  customChampions = selectedChampIds
+  if ($('#customChampions').is(':checked')) {
+    customChampions = selectedChampIds
+    if ($('#toplane').is(':checked')){
+      toplane = 1
+    }
+    if ($('#midlane').is(':checked')){
+      midlane = 1
+    }
+    if ($('#marksman').is(':checked')){
+      marksman = 1
+    }
+    if ($('#jungle').is(':checked')){
+      jungle = 1
+    }
+    if ($('#support').is(':checked')){
+      jungle = 1
+    }
+  } else {
+    customChampions = 'None'
+  }
   let numberOfWins = parseInt($('#winSlider').val())
   let optionsObj = {
     orderType,
@@ -513,7 +546,14 @@ function getFormOptions() {
     leagueQueue,
     desiredTier: $('#desiredTier').val(),
     desiredDivision: $('#desiredDivision').val(),
-    customChampions
+    customChampions,
+    roles: {
+      toplane,
+      midlane,
+      marksman,
+      jungle,
+      support
+    }
   }
   return optionsObj
 }
@@ -579,37 +619,49 @@ function removeInvalidFormOptions() {
       // Use solo league division/rank
       let soloCache = findObjectByKey(selectedAccount.data, 'queueType', 'RANKED_SOLO_5x5')
       let soloTc = getCurrentTierChar(soloCache.tier, soloCache.rank)
-      let soloTierChar = soloTc.substring(0, 1)
-      let soloRankChar = soloTc.substring(1)
-      let soloTierIndex = tierMap.indexOf(soloTierChar)
-      let soloRankIndex = divMap.indexOf(soloRankChar)
-      if (soloRankIndex === 3) {
-        // rank is 1
-        tierCache = tierOptions.slice(soloTierIndex + 1)
-        divCache = divisionOptions
+      if (soloTc === 'none') {
+        console.log('disable division boost')
+        $('#leagueBoost').prop('disabled', true)
       } else {
-        tierCache = tierOptions.slice(soloTierIndex)
-        divCache = divisionOptions.slice(soloRankIndex + 1)
+        $('#leagueBoost').prop('disabled', false)
+        let soloTierChar = soloTc.substring(0, 1)
+        let soloRankChar = soloTc.substring(1)
+        let soloTierIndex = tierMap.indexOf(soloTierChar)
+        let soloRankIndex = divMap.indexOf(soloRankChar)
+        if (soloRankIndex === 3) {
+          // rank is 1
+          tierCache = tierOptions.slice(soloTierIndex + 1)
+          divCache = divisionOptions
+        } else {
+          tierCache = tierOptions.slice(soloTierIndex)
+          divCache = divisionOptions.slice(soloRankIndex + 1)
+        }
+        populateFormOptions(tierCache, divCache)
       }
-      populateFormOptions(tierCache, divCache)
       break
     case 2:
       // use flex league division/rank
       let flexCache = findObjectByKey(selectedAccount.data, 'queueType', 'RANKED_FLEX_SR')
       let flexTc = getCurrentTierChar(flexCache.tier, flexCache.rank)
-      let flexTierChar = flexTc.substring(0, 1)
-      let flexRankChar = flexTc.substring(1)
-      let flexTierIndex = tierMap.indexOf(flexTierChar)
-      let flexRankIndex = divMap.indexOf(flexRankChar)
-      if (flexRankIndex === 3) {
-        // rank is 1
-        tierCache = tierOptions.slice(flexTierIndex + 1)
-        divCache = divisionOptions
+      if (flexTc === 'none') {
+        console.log('disable division boost')
+        $('#leagueBoost').prop('disabled', true)
       } else {
-        tierCache = tierOptions.slice(flexTierIndex)
-        divCache = divisionOptions.slice(flexRankIndex + 1)
+        $('#leagueBoost').prop('disabled', false)
+        let flexTierChar = flexTc.substring(0, 1)
+        let flexRankChar = flexTc.substring(1)
+        let flexTierIndex = tierMap.indexOf(flexTierChar)
+        let flexRankIndex = divMap.indexOf(flexRankChar)
+        if (flexRankIndex === 3) {
+          // rank is 1
+          tierCache = tierOptions.slice(flexTierIndex + 1)
+          divCache = divisionOptions
+        } else {
+          tierCache = tierOptions.slice(flexTierIndex)
+          divCache = divisionOptions.slice(flexRankIndex + 1)
+        }
+        populateFormOptions(tierCache, divCache)
       }
-      populateFormOptions(tierCache, divCache)
       break
   }
 }
@@ -705,24 +757,20 @@ $('#orderBoost').on('click', () => {
   if (selectedAccount.length < 1) {
     $('#notSelectedToast').toast('show')
   } else {
-    if ($('#customChampions').is(':checked')) {
-      $('#selectChampionsModal').modal('show')
+    myJson = {
+      selectedRegion,
+      selectedAccount,
+      formOptions: orderFormOptions
+    }
+    calculatedPrice = Math.round(calculatePrice(myJson))
+    if (calculatedPrice < 1) {
+      // show error
     } else {
-      myJson = {
-        selectedRegion,
-        selectedAccount,
-        formOptions: orderFormOptions
-      }
-      calculatedPrice = Math.round(calculatePrice(myJson))
-      if (calculatedPrice < 1) {
-        // show error
-      } else {
-        submitOrder(myJson)
-          .then(result => {
-            showOrder(result)
-          })
-          .catch(e => console.error(e))
-      }
+      submitOrder(myJson)
+        .then(result => {
+          showOrder(result)
+        })
+        .catch(e => console.error(e))
     }
   }
 })
@@ -748,6 +796,7 @@ $(document).on('click', (e) => {
 })
 $('#selectAccount').on('click', () => {
   selectedAccount = renderedAccount
+
   $('#alerts').html(`              <div class="alert alert-dismissible alert-success">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <strong>Account selected successfully!</strong>
@@ -755,9 +804,15 @@ $('#selectAccount').on('click', () => {
   removeInvalidFormOptions()
 })
 $(document).ready(() => {
+  $("#toplane").bootstrapSwitch()
+  $("#midlane").bootstrapSwitch()
+  $("#marksman").bootstrapSwitch()
+  $("#jungle").bootstrapSwitch()
+  $("#support").bootstrapSwitch()
   populateFormOptions(tierOptions, divisionOptions)
   $('#league').hide()
   $('#formError').hide()
+  $('#cChamps').hide()
   getChampionList()
     .then(cl => {
       championList = Object.keys(cl.data).map(i => cl.data[i])
@@ -806,4 +861,20 @@ $('#soloLeague').on('click', () => {
 })
 $('#flexLeague').on('click', () => {
   removeInvalidFormOptions()
+})
+$('#customChampions').on('click', () => {
+  if ($('#customChampions').is(':checked')) {
+    $('#cChamps').show()
+  } else {
+    $('#cChamps').hide()
+  }
+})
+$('#desiredTier').on('click', (req, res) => {
+  if ($('#desiredTier').val('Master')) {
+    $('#desiredDivision').hide()
+    $('#divLabel').hide()
+  } else {
+    $('#desiredDivision').show()
+    $('#divLabel').show()
+  }
 })

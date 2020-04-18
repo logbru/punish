@@ -6,10 +6,13 @@ const axios = require('axios')
 const { Account, Order } = require('../models')
 const { Random } = require("random-js")
 const random = new Random()
+const requestIp = require('request-ip')
 const API_KEY = process.env.API_KEY
 const kayn = Kayn(API_KEY)(
 
 )
+
+router.use(requestIp.mw())
 
 router.use(express.urlencoded({ extended: true }))
 router.use(express.json())
@@ -128,8 +131,14 @@ router.get('/get/account/:name/:region', (req, res) => {
 })
 
 router.post('/orders', (req, res) => {
-  let soloLeague = findObjectByKey(req.body.selectedAccount.data, 'queueType', 'RANKED_SOLO_5x5')
-  let flexLeague = findObjectByKey(req.body.selectedAccount.data, 'queueType', 'RANKED_FLEX_SR')
+  let soloLeague = findObjectByKey(req.body.selectedAccount.data, 'queueType', 'RANKED_SOLO_5x5') || {
+    tier: 'None',
+    rank: 'None'
+  }
+  let flexLeague = findObjectByKey(req.body.selectedAccount.data, 'queueType', 'RANKED_FLEX_SR') || {
+    tier: 'None',
+    rank: 'None'
+  }
   let accountData = {
     summonerId: req.body.selectedAccount.summoner.id,
     accountId: req.body.selectedAccount.summoner.accountId,
@@ -156,7 +165,13 @@ router.post('/orders', (req, res) => {
         desiredTier: req.body.formOptions.desiredTier,
         desiredDivision: req.body.formOptions.desiredDivision,
         customChampions: JSON.stringify(req.body.formOptions.customChampions),
-        accountId: insertedId
+        clientIp: req.clientIp,
+        accountId: insertedId,
+        midLane: req.body.formOptions.roles.midlane,
+        topLane: req.body.formOptions.roles.toplane,
+        marksman: req.body.formOptions.roles.marksman,
+        jungle: req.body.formOptions.roles.jungle,
+        support: req.body.formOptions.roles.support
       }
       Order.create(orderObj)
         .then(result => {
