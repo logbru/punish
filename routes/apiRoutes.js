@@ -65,8 +65,10 @@ router.get('/champions', (req, res) => {
 router.get('/championnames', (req, res) => {
   kayn.DDragon.Champion.list() // Implicitly targets 8.24.1
     .callback(function (error, champions) {
-      let listofchamps = []
-      res.json(Object.keys(champions.data))
+      var myData = Object.keys(champions.data).map(key => {
+        return champions.data[key];
+      })
+      res.json(myData)
     })
 })
 // Get summoner data

@@ -25,7 +25,7 @@ const Html = props => {
           integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
           crossOrigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
-        <script src="./assets/js/typeahead.js"></script>
+        <script src="./assets/js/type.min.js"></script>
         <script src="./assets/js/switch.js"></script>
           <script src="./assets/js/boost.js"></script>
       </body>

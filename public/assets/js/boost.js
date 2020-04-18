@@ -66,7 +66,7 @@ async function getAccount(name, region) {
 }
 async function getChampionList() {
   let response = await new Promise((resolve, reject) => {
-    $.get(`/api/champions`, (res) => {
+    $.get(`/api/championnames`, (res) => {
       if (!res) {
         reject(new Error('Error communicating with server'))
       } else {
@@ -689,18 +689,10 @@ function substringMatcher(strs) {
     cb(matches);
   }
 }
-function getChampFromList(value) {
-  for (var i = 0; i < championList.length; i++) {
-    if (championList[i]['name'] === value) {
-      return championList[i];
-    }
-  }
-  return null;
-}
 function renderSelectedChamps() {
   $('#championStream').html('')
   selectedChampIds.forEach(id => {
-    let cObj = getChampFromList(id)
+    let cObj = findObjectByKey(championList, 'key', id)
     let tags = ''
     cObj.tags.forEach(tag => {
       tags = tags.concat(`${tag}, `)
@@ -708,7 +700,7 @@ function renderSelectedChamps() {
     let champElement = `
   <div className="col-12">
     <div class="alert alert-dismissible alert-light">
-      <button type="button" class="close" cid="${cObj.id}" data-dismiss="alert">&times;</button>
+      <button type="button" class="close" cid="${cObj.key}" data-dismiss="alert">&times;</button>
       <img src="http://ddragon.leagueoflegends.com/cdn/5.9.1/img/champion/${cObj.image.full}" className="img-thumbnail thumb"/>
       <strong>${cObj.name}</strong><br/>
       ${tags}
@@ -718,9 +710,8 @@ function renderSelectedChamps() {
     $('#championStream').append(champElement)
   })
 }
-function selectChamp(champName) {
-  let champObj = getChampFromList(champName)
-  selectedChampIds.push(champObj.id)
+function selectChamp(key) {
+  selectedChampIds.push(key)
   renderSelectedChamps()
 }
 
@@ -815,21 +806,21 @@ $(document).ready(() => {
   $('#cChamps').hide()
   getChampionList()
     .then(cl => {
-      championList = Object.keys(cl.data).map(i => cl.data[i])
+      championList = cl
     })
     .catch(e => console.error(e))
   getChampionNames()
     .then(champList => {
       // champSearch
       $('#champSearch').typeahead({
-        hint: true,
-        highlight: true,
-        minLength: 1
-      },
-        {
-          name: 'champList',
-          source: substringMatcher(champList)
-        })
+        source: champList,
+        displayText: function (item) { return item.name; },
+        afterSelect: function (data) {
+          $('#champSearch').val('')
+          selectChamp(data.key)
+          console.log(data)
+        }
+      })
     })
     .catch(e => console.error(e))
 })
