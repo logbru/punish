@@ -457,7 +457,10 @@ function calculatePrice(data) {
         currentTier = selectedLeague.tier
         currentDivision = selectedLeague.rank
       } else {
-        selectedLeague = findObjectByKey(data.selectedAccount.data, 'queueType', 'RANKED_FLEX_SR')
+        selectedLeague = findObjectByKey(data.selectedAccount.data, 'queueType', 'RANKED_FLEX_SR') || {
+          tier: 'BRONZE',
+          rank: 'IV'
+        }
         currentTier = selectedLeague.tier
         currentDivision = selectedLeague.rank
       }
@@ -467,21 +470,26 @@ function calculatePrice(data) {
 
       let currentIndex = divisions.indexOf(currentTierChar)
       let desiredIndex = divisions.indexOf(desiredTierChar)
-      if (currentIndex === desiredIndex) {
-        $('#formError').show()
-        return 0
-      } else {
-        let jumpCount = desiredIndex - currentIndex
-        if (Math.sign(jumpCount) === -1) {
+      if (currentTierChar==='d1'){
+        totalPrice = 284
+        return totalPrice
+      }else{
+        if (currentIndex === desiredIndex) {
           $('#formError').show()
           return 0
         } else {
-          let purchaseArray = range(jumpCount, currentIndex + 1)
-          let totalPrice = 0
-          purchaseArray.forEach(index => {
-            totalPrice = totalPrice + divisionPrices[index]
-          })
-          return totalPrice
+          let jumpCount = desiredIndex - currentIndex
+          if (Math.sign(jumpCount) === -1) {
+            $('#formError').show()
+            return 0
+          } else {
+            let purchaseArray = range(jumpCount, currentIndex + 1)
+            let totalPrice = 0
+            purchaseArray.forEach(index => {
+              totalPrice = totalPrice + divisionPrices[index]
+            })
+            return totalPrice
+          }
         }
       }
       break
@@ -520,19 +528,19 @@ function getFormOptions() {
   }
   if ($('#customChampions').is(':checked')) {
     customChampions = selectedChampIds
-    if ($('#toplane').is(':checked')){
+    if ($('#toplane').is(':checked')) {
       toplane = 1
     }
-    if ($('#midlane').is(':checked')){
+    if ($('#midlane').is(':checked')) {
       midlane = 1
     }
-    if ($('#marksman').is(':checked')){
+    if ($('#marksman').is(':checked')) {
       marksman = 1
     }
-    if ($('#jungle').is(':checked')){
+    if ($('#jungle').is(':checked')) {
       jungle = 1
     }
-    if ($('#support').is(':checked')){
+    if ($('#support').is(':checked')) {
       jungle = 1
     }
   } else {
@@ -630,8 +638,14 @@ function removeInvalidFormOptions() {
         let soloRankIndex = divMap.indexOf(soloRankChar)
         if (soloRankIndex === 3) {
           // rank is 1
-          tierCache = tierOptions.slice(soloTierIndex + 1)
-          divCache = divisionOptions
+          if (soloTierChar === 'd' && soloRankChar === '1') {
+            tierCache = tierOptions.slice(soloTierIndex + 1)
+            $('#desiredDivision').hide()
+            $('#divLabel').hide()
+          } else {
+            tierCache = tierOptions.slice(soloTierIndex + 1)
+            divCache = divisionOptions
+          }
         } else {
           tierCache = tierOptions.slice(soloTierIndex)
           divCache = divisionOptions.slice(soloRankIndex + 1)
@@ -654,8 +668,14 @@ function removeInvalidFormOptions() {
         let flexRankIndex = divMap.indexOf(flexRankChar)
         if (flexRankIndex === 3) {
           // rank is 1
-          tierCache = tierOptions.slice(flexTierIndex + 1)
-          divCache = divisionOptions
+          if (flexTierChar === 'd' && flexRankChar === '1') {
+            tierCache = tierOptions.slice(flexTierIndex + 1)
+            $('#desiredDivision').hide()
+            $('#divLabel').hide()
+          } else {
+            tierCache = tierOptions.slice(flexTierIndex + 1)
+            divCache = divisionOptions
+          }
         } else {
           tierCache = tierOptions.slice(flexTierIndex)
           divCache = divisionOptions.slice(flexRankIndex + 1)
