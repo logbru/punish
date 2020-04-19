@@ -12,8 +12,23 @@
   width: 115px;
   height: 115px
 }
+.switchlabel{
+  font-size: medium;
+}
 
-.account {
+.price {
+  max-width: 20rem;
+}
+
+.accountRender {
+  display: none;
+}
+
+.option {
+  display: none;
+}
+
+#hasAccount {
   display: none;
 }
 

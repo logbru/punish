@@ -16,17 +16,55 @@ router.use(requestIp.mw())
 
 router.use(express.urlencoded({ extended: true }))
 router.use(express.json())
-// BRAZIL (BR)
-// EUROPE (EUNE)
-// EUROPE_WEST (EUW)
-// JAPAN (JP)
-// KOREA (KR)
-// LATIN AMERICA NORTH (LAN)
-// LATIN AMERICA SOUTH (LAS)
-// NORTH AMERICA (NA)
-// OCEANIA (OCE)
-// RUSSIA (RU)
-// TURKEY (TR)
+
+function getRankChar(rank){
+  switch (rank){
+    case 'IV':
+    return '4'
+    break
+    case 'III':
+    return '3'
+    break
+    case 'II':
+    return '2'
+    break
+    case 'I':
+    return '1'
+    break
+  }
+}
+
+function findObjectByKey(array, key, value) {
+  for (var i = 0; i < array.length; i++) {
+    if (array[i][key] === value) {
+      return array[i];
+    }
+  }
+  return null;
+}
+
+function buildLeagueData(obj){
+  if (obj===null) {
+    return {
+      tier: 'unranked',
+      division: 'unranked',
+      tierChar: '0',
+      rankChar: '0',
+      TierDiv: '00',
+      lp: 0
+    }
+  }else{
+    return {
+      tier: obj.tier,
+      division: obj.rank,
+      tierChar: obj.tier.charAt(0),
+      rankChar: getRankChar(obj.rank),
+      TierDiv: `${obj.tier.charAt(0)}${getRankChar(obj.rank)}`,
+      lp: obj.leaguePoints
+    }
+  }
+}
+
 function generateOrderNumber(){
   var result = '';
   for (var i = 0; i < 10; i++) {
@@ -43,7 +81,6 @@ function findObjectByKey(array, key, value) {
   }
   return null;
 }
-
 async function getLeague(id) {
   let response = await new Promise((resolve, reject) => {
     axios.get(`https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}?api_key=${API_KEY}`)
@@ -118,11 +155,14 @@ router.get('/get/account/:name/:region', (req, res) => {
         .then(data => {
           getLeague(summoner.id)
           .then(data => {
-            res.json({
+            let sLeague = findObjectByKey(data, 'queueType', 'RANKED_SOLO_5x5')
+            let fLeague = findObjectByKey(data, 'queueType', 'RANKED_FLEX_SR')
+            let returnJson = {
               summoner,
-              leagueCount: data.length,
-              data
-            })
+              solo: buildLeagueData(sLeague),
+              flex: buildLeagueData(fLeague)
+            }
+            res.json(returnJson)
           })
           .catch(e => console.log(e))
         })
@@ -130,59 +170,6 @@ router.get('/get/account/:name/:region', (req, res) => {
     })
     .catch(error => console.error(error))
 
-})
-
-router.post('/orders', (req, res) => {
-  let soloLeague = findObjectByKey(req.body.selectedAccount.data, 'queueType', 'RANKED_SOLO_5x5') || {
-    tier: 'None',
-    rank: 'None'
-  }
-  let flexLeague = findObjectByKey(req.body.selectedAccount.data, 'queueType', 'RANKED_FLEX_SR') || {
-    tier: 'None',
-    rank: 'None'
-  }
-  let accountData = {
-    summonerId: req.body.selectedAccount.summoner.id,
-    accountId: req.body.selectedAccount.summoner.accountId,
-    puuid: req.body.selectedAccount.summoner.puuid,
-    name: req.body.selectedAccount.summoner.name,
-    region: req.body.selectedRegion,
-    profileIconId: req.body.selectedAccount.summoner.profileIconId,
-    summonerLevel: req.body.selectedAccount.summoner.summonerLevel,
-    flexTier: flexLeague.tier || 'None',
-    flexRank: flexLeague.rank || 'None',
-    soloTier: soloLeague.tier || 'None',
-    soloRank: soloLeague.rank || 'None'
-  }
-  Account.create(accountData)
-    .then(insertedAccount => {
-      let insertedId = insertedAccount.dataValues.id
-      let orderNumber = random.integer(1000000000, 9999999999)
-      let orderObj = {
-        orderNumber,
-        orderType: req.body.formOptions.orderType,
-        winsQueue: req.body.formOptions.winsQueue,
-        numberOfWins: req.body.formOptions.numberOfWins,
-        leagueQueue: req.body.formOptions.leagueQueue,
-        desiredTier: req.body.formOptions.desiredTier,
-        desiredDivision: req.body.formOptions.desiredDivision,
-        customChampions: JSON.stringify(req.body.formOptions.customChampions),
-        clientIp: req.clientIp,
-        accountId: insertedId,
-        midLane: req.body.formOptions.roles.midlane,
-        topLane: req.body.formOptions.roles.toplane,
-        marksman: req.body.formOptions.roles.marksman,
-        jungle: req.body.formOptions.roles.jungle,
-        support: req.body.formOptions.roles.support
-      }
-      Order.create(orderObj)
-        .then(result => {
-          console.log(result)
-          res.json(result)
-        })
-        .catch(e => console.log(e))
-    })
-    .catch(e => console.log(e))
 })
 
 module.exports = router
