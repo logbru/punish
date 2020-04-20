@@ -14,6 +14,7 @@ PlacementOrder.init({
   marksman: STRING,
   jungle: STRING,
   support: STRING,
+  previousTier: STRING,
   numberOfGames: INTEGER
 }, { sequelize: require('../config'), modelName: 'placementorder' })
 

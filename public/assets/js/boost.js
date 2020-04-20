@@ -43,8 +43,8 @@ let grandmasterWinsAdd = 6
 let challengerWins = 35
 let challengerWinsAdd = 8
 // Base placement price
-let flexPlacementPrice = 2
-let soloPlacementPrice = 2
+let placementTiers = ['I', 'B', 'S', 'G', 'P', 'D', 'M']
+let placementPrices = [5, 10, 15, 20, 25, 30, 35]
 // Base flex duo game/win price
 let duoIronGames = [1.9, 1.9, 1.9, 1.9]
 let duoBronzeGames = [1.9, 1.9, 1.9, 1.9]
@@ -263,11 +263,10 @@ async function calculatePrice() {
       case 'flexBoost3':
         // Placement games
         let placementGameCount = parseInt($('#placementRange').val())
-        if (selectedQueue === 'solo') {
-          masterPrice = soloPlacementPrice * placementGameCount
-        } else {
-          masterPrice = flexPlacementPrice * placementGameCount
-        }
+        let pastTier = $('#previousSeason').val().charAt(0)
+        let pastTierIndex = placementTiers.indexOf(pastTier)
+        let placePrice = placementPrices[pastTierIndex]
+        masterPrice = placePrice * placementGameCount
         break
       case 'soloBoost4':
       case 'flexBoost4':
@@ -647,6 +646,7 @@ function buildOrder() {
         numberOfGames: $('#gamesRange').val()
       },
       placementGames: {
+        previousTier: $('#previousSeason').val(),
         numberOfGames: $('#placementRange').val()
       },
       rankedWins: {

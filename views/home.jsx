@@ -19,16 +19,16 @@ const Home = props => {
               <div className="collapse navbar-collapse" id="navbarColor01">
                 <ul className="navbar-nav mr-auto">
                   <li className="nav-item active">
-                    <a className="nav-link" href="#">Boosting <span className="sr-only">(current)</span></a>
+                    <a className="nav-link" href="/">Boosting <span className="sr-only">(current)</span></a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="#">FAQ</a>
+                    <a className="nav-link" href="/faq">FAQ</a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="#">Contact Us</a>
+                    <a className="nav-link" href="/contact">Contact Us</a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="#">About</a>
+                    <a className="nav-link" href="/about">About</a>
                   </li>
                 </ul>
                 <form className="form-inline my-2 my-lg-0">
@@ -247,21 +247,39 @@ const Home = props => {
                     {/* Placement Games */}
                     <div className="container">
                       <div className="row">
-                        <div className="col-sm-3"></div>
-                        <div className="col-sm-3">
-                          <label for="placementRange">Number of Games</label>
+                        <div className="col-sm-4">
+                          <div className="form-group">
+                            <label htmlFor="previousSeason">Previous Season Tier</label>
+                            <select multiple="" className="form-control" id="previousSeason">
+                              <option value="Iron">Iron</option>
+                              <option value="Bronze">Bronze</option>
+                              <option value="Silver">Silver</option>
+                              <option value="Gold">Gold</option>
+                              <option value="Platinum">Platinum</option>
+                              <option value="Diamond">Diamond</option>
+                              <option value="Master">Master</option>
+                            </select>
+                          </div>
                         </div>
-                        <div className="col-sm-3">
-                          <label for="placementRange"><span className="badge badge-pill badge-success"><h4 id="placementCount">  1  </h4></span></label>
+                        <div className="col-sm-8">
+                          <div className="row">
+                            <div className="col-sm-3"></div>
+                            <div className="col-sm-3">
+                              <label for="placementRange">Number of Games</label>
+                            </div>
+                            <div className="col-sm-3">
+                              <label for="placementRange"><span className="badge badge-pill badge-success"><h4 id="placementCount">  1  </h4></span></label>
+                            </div>
+                            <div className="col-sm-3"></div>
+                          </div>
+                          <div className="row">
+                            <div className="col-sm-3"></div>
+                            <div className="col-sm-6">
+                              <input type="range" className="custom-range" min="1" max="10" value="1" id="placementRange" />
+                            </div>
+                            <div className="col-sm-3"></div>
+                          </div>
                         </div>
-                        <div className="col-sm-3"></div>
-                      </div>
-                      <div className="row">
-                        <div className="col-sm-3"></div>
-                        <div className="col-sm-6">
-                          <input type="range" className="custom-range" min="1" max="10" value="1" id="placementRange" />
-                        </div>
-                        <div className="col-sm-3"></div>
                       </div>
                     </div>
                   </div>

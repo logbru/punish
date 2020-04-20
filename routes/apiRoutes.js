@@ -170,6 +170,7 @@ router.post('/orders', (req, res) => {
             marksman: order.roles.marksman,
             jungle: order.roles.jungle,
             support: order.roles.support,
+            previousTier: order.formOptions.placementGames.previousTier,
             numberOfGames: order.formOptions.placementGames.numberOfGames,
             accountId: insertedId
           })
