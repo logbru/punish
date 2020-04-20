@@ -251,6 +251,7 @@ const Home = props => {
                           <div className="form-group">
                             <label htmlFor="previousSeason">Previous Season Tier</label>
                             <select multiple="" className="form-control" id="previousSeason">
+                              <option value="Unranked">Unranked</option>
                               <option value="Iron">Iron</option>
                               <option value="Bronze">Bronze</option>
                               <option value="Silver">Silver</option>
@@ -258,6 +259,8 @@ const Home = props => {
                               <option value="Platinum">Platinum</option>
                               <option value="Diamond">Diamond</option>
                               <option value="Master">Master</option>
+                              <option value="Grandmaster">Grandmaster</option>
+                              <option value="Challenger">Challenger</option>
                             </select>
                           </div>
                         </div>

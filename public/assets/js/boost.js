@@ -14,7 +14,7 @@ let tierOptions = [
   '<option value="Master">Master</option>'
 ]
 let divisionOptions = [
-  '<option value="IV">Divisin IV</option>',
+  '<option value="IV">Division IV</option>',
   '<option value="III">Division III</option>',
   '<option value="II">Division II</option>',
   '<option value="I">Division I</option>'
@@ -43,8 +43,8 @@ let grandmasterWinsAdd = 6
 let challengerWins = 35
 let challengerWinsAdd = 8
 // Base placement price
-let placementTiers = ['I', 'B', 'S', 'G', 'P', 'D', 'M']
-let placementPrices = [5, 10, 15, 20, 25, 30, 35]
+let placementTiers = ['Unranked', 'Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Master', 'Grandmaster', 'Challenger']
+let placementPrices = [5, 7, 9, 11, 13, 15, 17, 19, 21, 25]
 // Base flex duo game/win price
 let duoIronGames = [1.9, 1.9, 1.9, 1.9]
 let duoBronzeGames = [1.9, 1.9, 1.9, 1.9]
@@ -147,7 +147,7 @@ async function calculatePrice() {
         } else {
           curTierDiv = account.info.flex.TierDiv
         }
-        if (desTierDiv.charAt(0)==='M') {
+        if (desTierDiv.charAt(0) === 'M') {
           let currentIndex = divisions.indexOf(curTierDiv)
           let desiredIndex = divisions.indexOf('M')
           let jumpCount = desiredIndex - currentIndex
@@ -157,7 +157,7 @@ async function calculatePrice() {
             totalPrice = totalPrice + divisionPrices[index]
           })
           masterPrice = totalPrice
-        }else{
+        } else {
           let currentIndex = divisions.indexOf(curTierDiv)
           let desiredIndex = divisions.indexOf(desTierDiv)
           let jumpCount = desiredIndex - currentIndex
@@ -186,11 +186,11 @@ async function calculatePrice() {
         }
         if (selectedQueue === 'solo') {
           duoTier = account.info.solo.tier
-          duoRank = parseInt(account.info.solo.rankChar)
+          duoRank = parseInt(account.info.solo.rankChar) - 1
           duoLP = account.info.solo.lp
         } else {
           duoTier = account.info.flex.tier
-          duoRank = parseInt(account.info.flex.rankChar)
+          duoRank = parseInt(account.info.flex.rankChar) - 1
           duoLP = account.info.flex.lp
         }
         switch (duoTier) {
@@ -216,6 +216,9 @@ async function calculatePrice() {
             }
             break
           case 'DIAMOND':
+            console.log(duoDiamondGames)
+            console.log(duoDiamondWins)
+            console.log(duoRank)
             if (gameType === 1) {
               masterPrice = duoDiamondGames[duoRank] * numOfGames
             } else {
@@ -244,6 +247,9 @@ async function calculatePrice() {
             }
             break
           case 'BRONZE':
+            console.log(duoBronzeGames)
+            console.log(duoBronzeWins)
+            console.log(duoRank)
             if (gameType === 1) {
               masterPrice = duoBronzeGames[duoRank] * numOfGames
             } else {
@@ -263,7 +269,7 @@ async function calculatePrice() {
       case 'flexBoost3':
         // Placement games
         let placementGameCount = parseInt($('#placementRange').val())
-        let pastTier = $('#previousSeason').val().charAt(0)
+        let pastTier = $('#previousSeason').val()
         let pastTierIndex = placementTiers.indexOf(pastTier)
         let placePrice = placementPrices[pastTierIndex]
         masterPrice = placePrice * placementGameCount
@@ -587,7 +593,7 @@ function renderPrice() {
     })
     .catch(e => console.log(e))
 }
-function renderChampions(){
+function renderChampions() {
   $('#championStream').html('')
   selectedChampions.forEach(key => {
     let champ = findChampionByKey(key)
@@ -611,7 +617,7 @@ function renderChampions(){
     $('#championStream').append(cElement)
   })
 }
-function removeChamp(cid){
+function removeChamp(cid) {
   selectedChampions.splice(selectedChampions.indexOf(cid), 1)
   renderChampions()
 }
@@ -672,7 +678,7 @@ $("#smartwizard").on("leaveStep", function (e, anchorObject, stepNumber, stepDir
     }
   }
   if (stepNumber === 2 && stepDirection === 'forward') {
-    if (selectedOption!==undefined) {
+    if (selectedOption !== undefined) {
       $('#nooverview').hide()
       $('#hasoverview').show()
     }
@@ -739,20 +745,20 @@ $('#winRange').on('click', () => {
   $('#winCount').text(`  ${$('#winRange').val()}  `)
 })
 $('#customChampions').on('click', () => {
-  if ($('#customChampions').is(':checked')){
+  if ($('#customChampions').is(':checked')) {
     $('#championCard').show()
     customChampions = true
-  }else{
+  } else {
     $('#championCard').hide()
     customChampions = false
   }
 })
 $(document).on('click', e => {
-renderPrice()
-if ($(e.target).hasClass('remove-champ')){
-  let cid = $(e.target).attr('cid')
-  removeChamp(cid)
-}
+  renderPrice()
+  if ($(e.target).hasClass('remove-champ')) {
+    let cid = $(e.target).attr('cid')
+    removeChamp(cid)
+  }
 })
 $(document).ready(function () {
   $('#accountRender').hide()
