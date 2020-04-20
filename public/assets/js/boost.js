@@ -3,6 +3,7 @@ let account = {}
 let boostOptions = {}
 let selectedOption
 let selectedQueue
+let priceCache
 let tierOptions = [
   '<option value="Iron">Iron</option>',
   '<option value="Bronze">Bronze</option>',
@@ -23,6 +24,10 @@ let divMap = ['4', '3', '2', '1']
 let tierCache
 let divCache
 let divisions = ['I4', 'I3', 'I2', 'I1', 'B4', 'B3', 'B2', 'B1', 'S4', 'S3', 'S2', 'S1', 'G4', 'G3', 'G2', 'G1', 'G4', 'P3', 'P2', 'P1', 'D4', 'D3', 'D2', 'D1', 'M']
+let customChampions = false
+let selectedChampions = []
+let championArr = []
+let selectedRegion
 // PRICE VARS
 // Base win price
 let ironWins = [1.9, 1.9, 1.9, 1.9]
@@ -69,6 +74,30 @@ let duoChallengerWinsAdd = 8
 // Division prices
 let divisionPrices = [10, 10, 10, 10, 10, 10, 10, 10, 12, 12, 12, 12, 20, 20, 20, 20, 29, 29, 29, 29, 80, 80, 80, 80, 284]
 // FUNCTIONS
+async function getChampionNames() {
+  let response = await new Promise((resolve, reject) => {
+    $.get(`/api/championnames`, (res) => {
+      if (!res) {
+        reject(new Error('Error communicating with server'))
+      } else {
+        resolve((res))
+      }
+    })
+  })
+
+  return response
+}
+async function submitOrder(obj) {
+  let response = await new Promise((resolve, reject) => {
+    axios.post(`./api/orders`, obj)
+      .then((data) => {
+        resolve(data)
+      })
+      .catch(e => reject(e))
+  })
+
+  return response
+}
 function getTierDiv(tier, rank) {
   let t = tier.charAt(0)
   switch (rank) {
@@ -289,12 +318,13 @@ async function calculatePrice() {
     if (masterPrice === 0) {
       reject(masterPrice)
     } else {
-      resolve(masterPrice)
+      resolve(Math.round(masterPrice))
     }
   })
   return response
 }
 function renderProfile(account) {
+  selectedRegion = $('#searchServer').val()
   $('#profileIcon').attr('src', `./assets/images/profileicon/${account.summoner.profileIconId}.png`)
   $('#profileName').text(account.summoner.name)
   $('#profileLevel').text(`Level: ${account.summoner.summonerLevel}`)
@@ -316,6 +346,14 @@ function renderProfile(account) {
   $('#profileTable').append(soloRow)
   $('#profileTable').append(flexRow)
   $(".accountRender").show()
+}
+function findChampionByKey(value) {
+  for (var i = 0; i < championArr.length; i++) {
+    if (championArr[i]['key'] === value) {
+      return championArr[i];
+    }
+  }
+  return null;
 }
 function getSoloBoostOptions() {
   let soloRankedWins
@@ -545,16 +583,98 @@ function setBoostOptions() {
 function renderPrice() {
   calculatePrice()
     .then(price => {
+      priceCache = price
       $('#curPrice').text(`€${price}`)
     })
     .catch(e => console.log(e))
 }
+function renderChampions(){
+  $('#championStream').html('')
+  selectedChampions.forEach(key => {
+    let champ = findChampionByKey(key)
+    console.log(champ)
+    let cElement = `
+    <div className="col-sm-3 text-center">
+      <div class="alert alert-dismissible alert-light">
+        <button type="button" cid="${champ.key}" class="close remove-champ" data-dismiss="alert">&times;</button>
+        <div className="row">
+          <img src="./assets/images/champion/${champ.name}.png" className="img-thumbnail thumb"/>
+        </div>
+        <div className="row">
+          <h5>${champ.name}</h5>
+        </div>
+        <div className="row">
+          <h6>${champ.title}</h6>
+        </div>
+      </div>
+    </div>
+    `
+    $('#championStream').append(cElement)
+  })
+}
+function removeChamp(cid){
+  selectedChampions.splice(selectedChampions.indexOf(cid), 1)
+  renderChampions()
+}
+function buildOrder() {
+  return {
+    account,
+    region: selectedRegion,
+    order: {
+      price: priceCache,
+      orderType: selectedOption,
+      queue: selectedQueue,
+    },
+    customChampions: {
+      useChampions: customChampions,
+      championArray: selectedChampions
+    },
+    roles: {
+      midlane: $('#midlane').is(':checked'),
+      toplane: $('#toplane').is(':checked'),
+      marksman: $('#marksman').is(':checked'),
+      jungle: $('#jungle').is(':checked'),
+      support: $('#support').is(':checked')
+    },
+    formOptions: {
+      divisionBoost: {
+        desiredTier: $('#desiredTier').val(),
+        desiredDivision: $('#desiredDivision').val()
+      },
+      duoGames: {
+        games: $('#gamesOnly').is(':checked'),
+        wins: $('#winsOnly').is(':checked'),
+        numberOfGames: $('#gamesRange').val()
+      },
+      placementGames: {
+        numberOfGames: $('#placementRange').val()
+      },
+      rankedWins: {
+        numberOfWins: $('#winRange').val()
+      }
+    }
+  }
+}
+
 // DOM
+$('#boostMe').on('click', () => {
+  submitOrder(buildOrder())
+    .then(result => {
+      console.log(result)
+    })
+    .catch(e => console.log(e))
+})
 $("#smartwizard").on("leaveStep", function (e, anchorObject, stepNumber, stepDirection) {
   if (stepNumber === 0 && stepDirection === 'forward') {
     if (jQuery.isEmptyObject(account) === false) {
       $('#noAccount').hide()
       $('#hasAccount').show()
+    }
+  }
+  if (stepNumber === 2 && stepDirection === 'forward') {
+    if (selectedOption!==undefined) {
+      $('#nooverview').hide()
+      $('#hasoverview').show()
     }
   }
 })
@@ -618,11 +738,38 @@ $('#placementRange').on('click', () => {
 $('#winRange').on('click', () => {
   $('#winCount').text(`  ${$('#winRange').val()}  `)
 })
+$('#customChampions').on('click', () => {
+  if ($('#customChampions').is(':checked')){
+    $('#championCard').show()
+    customChampions = true
+  }else{
+    $('#championCard').hide()
+    customChampions = false
+  }
+})
 $(document).on('click', e => {
 renderPrice()
+if ($(e.target).hasClass('remove-champ')){
+  let cid = $(e.target).attr('cid')
+  removeChamp(cid)
+}
 })
 $(document).ready(function () {
   $('#accountRender').hide()
   $('#smartwizard').smartWizard()
-  $("#customChampions").bootstrapSwitch()
+  getChampionNames()
+    .then(champList => {
+      // champSearch
+      championArr = champList
+      $('#champSearch').typeahead({
+        source: championArr,
+        displayText: function (item) { return item.name; },
+        afterSelect: function (data) {
+          $('#champSearch').val('')
+          selectedChampions.push(data.key)
+          renderChampions()
+        }
+      })
+    })
+    .catch(e => console.error(e))
 })

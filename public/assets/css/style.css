@@ -2,6 +2,10 @@
   width: auto;
   height: 115px
 }
+.role-icon {
+  width: 100px;
+  height: 100px
+}
 
 .spin {
   display: none;
@@ -20,7 +24,13 @@
   max-width: 20rem;
 }
 
+.spacer {
+  height: 300px
+}
 .accountRender {
+  display: none;
+}
+.champ-card {
   display: none;
 }
 

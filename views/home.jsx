@@ -41,19 +41,21 @@ const Home = props => {
       </div>
       <div className="container">
         <div className="row">
-          <div className="col-12">
+          <div className="col-sm-6">
             <h2 className='text-muted mt-5 mb-5'>
               Punish Boosting Services
             </h2>
           </div>
-        </div>
-        <div className="row">
-          <div className="col-12">
-            <div className="card border-secondary mb-3 price float-right">
+          <div className="col-sm-6">
+            <div className="card border-secondary mt-4 price float-right">
               <div className="card-body">
                 <h4 className="card-title"><span className="text-muted">Current Price: </span><span id="curPrice" className="text-success">€0</span></h4>
               </div>
             </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12">
             <div id="smartwizard">
               <ul>
                 <li><a href="#account">Select Account<br /><small>Search for your LoL account</small></a></li>
@@ -127,8 +129,8 @@ const Home = props => {
                   <div className="container">
                     <div className="row">
                       <div className="col-12">
-                        <div id="noAccount">
-                          <h3>NO acount selected</h3>
+                        <div id="noAccount" className="text-center">
+                          <img src="./assets/images/noaccount.png" alt="" />
                         </div>
                       </div>
                       <div className="col-12">
@@ -136,7 +138,8 @@ const Home = props => {
                           <fieldset>
                             <div className="row">
                               <div className="col-sm-6 text-center">
-                                <h4>Solo Queue Options</h4>
+                                <h4 className="text-muted">Solo Queue Options</h4>
+                                <hr></hr>
                                 <div className="form-group">
                                   <div id="solo1">
                                     <button type="button" id="soloBoost1" className="btn btn-primary nextstep mt-2">Division Boost</button>
@@ -153,7 +156,8 @@ const Home = props => {
                                 </div>
                               </div>
                               <div className="col-sm-6 text-center">
-                                <h4>Flex Queue Options</h4>
+                                <h4 className="text-muted">Flex Queue Options</h4>
+                                <hr></hr>
                                 <div className="form-group">
                                   <div id="flex1">
                                     <button type="button" id="flexBoost1" className="btn btn-primary nextstep mt-2">Division Boost</button>
@@ -177,8 +181,8 @@ const Home = props => {
                   </div>
                 </div>
                 <div id="options" className="">
-                  <div id="notype">
-                    <h1>No boost type selected</h1>
+                  <div id="notype" className="text-center">
+                    <img src="./assets/images/noboost.png" alt="" />
                   </div>
                   <div id="b1" className="option">
                     {/* division boost */}
@@ -186,7 +190,6 @@ const Home = props => {
                       <div className="row">
                         <div className="col-sm-3"></div>
                         <div className="col-sm-6">
-                          <h1>division boost</h1>
                           <div className="form-group">
                             <label for="desiredTier">Desired Tier</label>
                             <select className="form-control" id="desiredTier">
@@ -289,11 +292,35 @@ const Home = props => {
                   {/* Order overview */}
                   <div className="container">
                     <div className="row">
-                      <div className="col-sm-4">
-                        <h4 className="text-muted mb-2">Add-Ons</h4>
-                        <hr></hr>
-                        <input type="checkbox" name="customChampions" id="customChampions" />
-                        <span className="text-muted ml-2 switchlabel">Select Champions/Roles (+0%)</span>
+                      <div className="col-12">
+                        <div id="nooverview" className="text-center">
+                          <img src="./assets/images/noboost.png" alt="" />
+                        </div>
+                      </div>
+                      <div className="col-12">
+                        <div id="hasoverview" className="option">
+                          <div className="row">
+                            <div className="col-sm-4">
+                              <h4 className="text-muted mb-2">Add-Ons</h4>
+                              <hr></hr>
+                              <fieldset>
+                                <div class="form-group">
+                                  <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="customChampions" checked="" />
+                                    <label class="custom-control-label" for="customChampions">Toggle this switch element</label>
+                                  </div>
+                                </div>
+                              </fieldset>
+                            </div>
+                            <div className="col-sm-4">
+                              <h4 className="text-muted mb-2">Overview</h4>
+                              <hr></hr>
+                            </div>
+                            <div className="col-sm-4">
+                              <button type="button" className="btn btn-success" id="boostMe">Boost Me</button>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -301,6 +328,150 @@ const Home = props => {
               </div>
             </div>
           </div>
+        </div>
+        <div className="row">
+          <div className="col-12">
+            <div className="card border-primary mb-3 mt-3 champ-card" id="championCard">
+              <div className="card-header">Custom Champions and Roles</div>
+              <div className="card-body">
+                <div className="container">
+                  <div className="row">
+                    <div className="col-12">
+                      <h4 className="text-muted">Roles</h4>
+                      <hr></hr>
+                      <div className="row">
+                        <div className="col-sm-1"></div>
+                        <div className="col-sm-2">
+                          <div class="card">
+                            <div class="card-body">
+                              <h5 class="card-title text-muted">Mid Lane</h5>
+                              <div className="row text-center">
+                                <div className="col-12">
+                                  <img src="./assets/images/mid.png" alt="Mid Lane" className="img-thumbnail role-icon" />
+                                  <fieldset>
+                                    <div class="form-group mt-3">
+                                      <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="midlane" checked="" />
+                                        <label class="custom-control-label" for="midlane"></label>
+                                      </div>
+                                    </div>
+                                  </fieldset>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-sm-2">
+                          <div class="card">
+                            <div class="card-body">
+                              <h5 class="card-title text-muted">Top Lane</h5>
+                              <div className="row text-center">
+                                <div className="col-12">
+                                  <img src="./assets/images/top.png" alt="Mid Lane" className="img-thumbnail role-icon" />
+                                  <fieldset>
+                                    <div class="form-group mt-3">
+                                      <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="toplane" checked="" />
+                                        <label class="custom-control-label" for="toplane"></label>
+                                      </div>
+                                    </div>
+                                  </fieldset>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-sm-2">
+                          <div class="card">
+                            <div class="card-body">
+                              <h5 class="card-title text-muted">Marksman</h5>
+                              <div className="row text-center">
+                                <div className="col-12">
+                                  <img src="./assets/images/marksman.png" alt="marksman" className="img-thumbnail role-icon" />
+                                  <fieldset>
+                                    <div class="form-group mt-3">
+                                      <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="marksman" checked="" />
+                                        <label class="custom-control-label" for="marksman"></label>
+                                      </div>
+                                    </div>
+                                  </fieldset>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-sm-2">
+                          <div class="card">
+                            <div class="card-body">
+                              <h5 class="card-title text-muted">Jungle</h5>
+                              <div className="row text-center">
+                                <div className="col-12">
+                                  <img src="./assets/images/jungle.png" alt="jungle" className="img-thumbnail role-icon" />
+                                  <fieldset>
+                                    <div class="form-group mt-3">
+                                      <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="jungle" checked="" />
+                                        <label class="custom-control-label" for="jungle"></label>
+                                      </div>
+                                    </div>
+                                  </fieldset>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-sm-2">
+                          <div class="card">
+                            <div class="card-body">
+                              <h5 class="card-title text-muted">Support</h5>
+                              <div className="row text-center">
+                                <div className="col-12">
+                                  <img src="./assets/images/support.png" alt="support" className="img-thumbnail role-icon" />
+                                  <fieldset>
+                                    <div class="form-group mt-3">
+                                      <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="support" checked="" />
+                                        <label class="custom-control-label" for="support"></label>
+                                      </div>
+                                    </div>
+                                  </fieldset>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-sm-1"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-12">
+                      <hr></hr>
+                      <h4 className="text-muted">Champions</h4>
+                      <hr></hr>
+                      <div className="row">
+                        <div className="col-4">
+                          <form>
+                            <div className="form-group">
+                              <label htmlFor="champSearch" className="text-muted">Search champions</label>
+                              <input type="text" className="form-control" id="champSearch" placeholder="Enter champion name" />
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                      <div className="row" id="championStream">
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12"><div className="spacer"></div></div>
         </div>
       </div>
     </Html >

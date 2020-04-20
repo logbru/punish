@@ -10,7 +10,7 @@ const Html = props => {
         <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
         <link href="./assets/css/smart_wizard.css" rel="stylesheet" type="text/css" />
         <link href="./assets/css/swarrows.css" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="./assets/css/switch.css" />
+        <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet"/>
         <link rel="stylesheet" href="./assets/css/style.css" />
       </head>
 
@@ -29,7 +29,7 @@ const Html = props => {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
         <script src="./assets/js/jquery.smartWizard.js" type="text/javascript"></script>
         <script src="./assets/js/type.min.js"></script>
-        <script src="./assets/js/switch.js"></script>
+          <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
           <script src="./assets/js/boost.js"></script>
       </body>
     </html>
