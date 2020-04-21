@@ -598,6 +598,10 @@ function renderChampions() {
   selectedChampions.forEach(key => {
     let champ = findChampionByKey(key)
     console.log(champ)
+    let tagList = ''
+    champ.tags.forEach(tag => {
+      tagList = tagList.concat(`<span class="badge badge-pill badge-info mr-1">${tag}</span>`)
+    })
     let cElement = `
     <div className="col-sm-3 text-center">
       <div class="alert alert-dismissible alert-light">
@@ -610,6 +614,9 @@ function renderChampions() {
         </div>
         <div className="row">
           <h6>${champ.title}</h6>
+        </div>
+        <div className="row">
+          ${tagList}
         </div>
       </div>
     </div>
@@ -658,7 +665,195 @@ function buildOrder() {
       rankedWins: {
         numberOfWins: $('#winRange').val()
       }
+    },
+    other: {
+      discord: $('#discord').val(),
+      discount: $('#discount').val(),
+      comments: $('#comments').val()
     }
+  }
+}
+function getOverview() {
+  switch (selectedOption) {
+    case 'soloBoost1':
+    case 'flexBoost1':
+      return {
+        queue: selectedQueue,
+        optionCode: selectedOption,
+        optionText: 'Division Boost',
+        desiredTier: $('#desiredTier').val(),
+        desiredDivision: $('#desiredDivision').val()
+      }
+      break
+    case 'soloBoost2':
+    case 'flexBoost2':
+      return {
+        queue: selectedQueue,
+        optionCode: selectedOption,
+        optionText: 'Duo Games or Wins',
+        games: $('#gamesOnly').is(':checked'),
+        wins: $('#winsOnly').is(':checked'),
+        numberOfGames: $('#gamesRange').val()
+      }
+      break
+    case 'soloBoost3':
+    case 'flexBoost3':
+      return {
+        queue: selectedQueue,
+        optionCode: selectedOption,
+        optionText: 'Placement Games',
+        pastTier: $('#previousSeason').val(),
+        numberOfGames: $('#placementRange').val()
+      }
+      break
+    case 'soloBoost4':
+    case 'flexBoost4':
+      return {
+        queue: selectedQueue,
+        optionCode: selectedOption,
+        optionText: 'Ranked Wins',
+        numberOfGames: $('#winRange').val()
+      }
+      break
+  }
+}
+function renderOverview() {
+  $('#over').html(``)
+  let over = getOverview()
+  let overPrice = $('#curPrice').text()
+  let overQueue
+  if (over.queue==='solo'){
+    overQueue = "Solo Queue"
+  }else{
+    overQueue = "Flex Queue"
+  }
+  switch (over.optionCode) {
+    case 'soloBoost1':
+    case 'flexBoost1':
+      if (over.desiredTier==="Master"){
+        $('#over').html(`
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Boost Type: <span class="text-info"><h5>${over.optionText}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Queue: <span class="text-info"><h5>${overQueue}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          New Tier: <span class="text-info"><h5>${over.desiredTier}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Total Price: <span class="badge badge-success"><h5>${overPrice}</h5></span>
+        </li>
+      </ul>
+      `)
+      }else{
+        $('#over').html(`
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Boost Type: <span class="text-info"><h5>${over.optionText}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Queue: <span class="text-info"><h5>${overQueue}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          New Tier: <span class="text-info"><h5>${over.desiredTier}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          New Division: <span class="text-info"><h5>${over.desiredDivision}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Total Price: <span class="badge badge-success"><h5>${overPrice}</h5></span>
+        </li>
+      </ul>
+      `)
+      }
+      break
+    case 'soloBoost2':
+    case 'flexBoost2':
+      if (over.games===true){
+        $('#over').html(`
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Boost Type: <span class="text-info"><h5>${over.optionText}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Queue: <span class="text-info"><h5>${overQueue}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Option: <span class="text-info"><h5>Games Only</h5></span>
+        </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+          Number of Games: <span class="text-info"><h5>${over.numberOfGames}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Price: <span class="badge badge-success"><h5>${overPrice}</h5></span>
+        </li>
+      </ul>
+      `)
+      }else{
+        $('#over').html(`
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Boost Type: <span class="text-info"><h5>${over.optionText}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Queue: <span class="text-info"><h5>${overQueue}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Option: <span class="text-info"><h5>Wins Only</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Number of Wins: <span class="text-info"><h5>${over.numberOfGames}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Price: <span class="badge badge-success"><h5>${overPrice}</h5></span>
+        </li>
+      </ul>
+      `)
+      }
+      break
+    case 'soloBoost3':
+    case 'flexBoost3':
+      $('#over').html(`
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Boost Type: <span class="text-info"><h5>${over.optionText}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Queue: <span class="text-info"><h5>${overQueue}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Previous Tier: <span class="text-info"><h5>${over.pastTier}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Number of Games: <span class="text-info"><h5>${over.numberOfGames}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Prices: <span class="badge badge-success"><h5>${overPrice}</h5></span>
+        </li>
+      </ul>
+      `)
+      break
+    case 'soloBoost4':
+    case 'flexBoost4':
+      $('#over').html(`
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Boost Type: <span class="text-info"><h5>${over.optionText}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Queue: <span class="text-info"><h5>${overQueue}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Number of Wins: <span class="text-info"><h5>${over.numberOfGames}</h5></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Prices: <span class="badge badge-success"><h5>${overPrice}</h5></span>
+        </li>
+      </ul>
+      `)
+      break
   }
 }
 
@@ -680,6 +875,7 @@ $("#smartwizard").on("leaveStep", function (e, anchorObject, stepNumber, stepDir
   if (stepNumber === 2 && stepDirection === 'forward') {
     if (selectedOption !== undefined) {
       $('#nooverview').hide()
+      renderOverview()
       $('#hasoverview').show()
     }
   }

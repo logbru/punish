@@ -322,6 +322,13 @@ const Home = props => {
                         <div id="hasoverview" className="option">
                           <div className="row">
                             <div className="col-sm-4">
+                              <h4 className="text-muted mb-2">Overview</h4>
+                              <hr></hr>
+                              <div id="over">
+
+                              </div>
+                            </div>
+                            <div className="col-sm-4">
                               <h4 className="text-muted mb-2">Add-Ons</h4>
                               <hr></hr>
                               <fieldset>
@@ -334,11 +341,23 @@ const Home = props => {
                               </fieldset>
                             </div>
                             <div className="col-sm-4">
-                              <h4 className="text-muted mb-2">Overview</h4>
+                              <h4 className="text-muted mb-2">Submit Order</h4>
                               <hr></hr>
-                            </div>
-                            <div className="col-sm-4">
-                              <button type="button" className="btn btn-success" id="boostMe">Boost Me</button>
+                              <form>
+                                <div class="form-group">
+                                  <label for="discord">Discord</label>
+                                  <input type="text" class="form-control" id="discord" placeholder="Enter discord"/>
+                                </div>
+                                <div class="form-group">
+                                  <label for="discount">Discount Code</label>
+                                  <input type="text" class="form-control" id="discount" placeholder="Enter discount code"/>
+                                </div>
+                                <div class="form-group">
+                                  <label for="comments">Anything else we need to know?</label>
+                                  <textarea class="form-control" id="comments" rows="3"></textarea>
+                                </div>
+                              </form>
+                              <button type="button" className="btn btn-success float-right" id="boostMe">Purchase</button>
                             </div>
                           </div>
                         </div>
@@ -362,7 +381,7 @@ const Home = props => {
                       <hr></hr>
                       <div className="row">
                         <div className="col-sm-1"></div>
-                        <div className="col-sm-2">
+                        <div className="col-sm-2 text-center">
                           <div class="card">
                             <div class="card-body">
                               <h5 class="card-title text-muted">Mid Lane</h5>
@@ -382,7 +401,7 @@ const Home = props => {
                             </div>
                           </div>
                         </div>
-                        <div className="col-sm-2">
+                        <div className="col-sm-2 text-center">
                           <div class="card">
                             <div class="card-body">
                               <h5 class="card-title text-muted">Top Lane</h5>
@@ -402,7 +421,7 @@ const Home = props => {
                             </div>
                           </div>
                         </div>
-                        <div className="col-sm-2">
+                        <div className="col-sm-2 text-center">
                           <div class="card">
                             <div class="card-body">
                               <h5 class="card-title text-muted">Marksman</h5>
@@ -422,7 +441,7 @@ const Home = props => {
                             </div>
                           </div>
                         </div>
-                        <div className="col-sm-2">
+                        <div className="col-sm-2 text-center">
                           <div class="card">
                             <div class="card-body">
                               <h5 class="card-title text-muted">Jungle</h5>
@@ -442,7 +461,7 @@ const Home = props => {
                             </div>
                           </div>
                         </div>
-                        <div className="col-sm-2">
+                        <div className="col-sm-2 text-center">
                           <div class="card">
                             <div class="card-body">
                               <h5 class="card-title text-muted">Support</h5>

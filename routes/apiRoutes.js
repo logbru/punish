@@ -114,6 +114,9 @@ router.post('/orders', (req, res) => {
           DivisionOrder.create({
             orderNumber: orderNumber,
             price: parseInt(order.order.price),
+            discord: order.other.discord,
+            discount: order.other.discount,
+            comments: order.other.comments,
             orderType: order.order.orderType,
             queue: order.order.queue,
             useCustomChampions: order.customChampions.useChampions,
@@ -127,8 +130,11 @@ router.post('/orders', (req, res) => {
             desiredDivision: order.formOptions.divisionBoost.desiredDivision,
             accountId: insertedId
           })
-          .then(() => {
-            res.sendStatus(200)
+          .then(item => {
+            res.json({
+              status: 200,
+              orderNumber: item.orderNumber
+            })
           })
           .catch(e => console.log(e))
           break
@@ -137,6 +143,9 @@ router.post('/orders', (req, res) => {
           DuoOrder.create({
             orderNumber: orderNumber,
             price: parseInt(order.order.price),
+            discord: order.other.discord,
+            discount: order.other.discount,
+            comments: order.other.comments,
             orderType: order.order.orderType,
             queue: order.order.queue,
             useCustomChampions: order.customChampions.useChampions,
@@ -151,8 +160,11 @@ router.post('/orders', (req, res) => {
             numberOfGames: order.formOptions.duoGames.numberOfGames,
             accountId: insertedId
           })
-            .then(() => {
-              res.sendStatus(200)
+            .then(item => {
+              res.json({
+                status: 200,
+                orderNumber: item.orderNumber
+              })
             })
             .catch(e => console.log(e))
           break
@@ -161,6 +173,9 @@ router.post('/orders', (req, res) => {
           PlacementOrder.create({
             orderNumber: orderNumber,
             price: parseInt(order.order.price),
+            discord: order.other.discord,
+            discount: order.other.discount,
+            comments: order.other.comments,
             orderType: order.order.orderType,
             queue: order.order.queue,
             useCustomChampions: order.customChampions.useChampions,
@@ -174,8 +189,11 @@ router.post('/orders', (req, res) => {
             numberOfGames: order.formOptions.placementGames.numberOfGames,
             accountId: insertedId
           })
-            .then(() => {
-              res.sendStatus(200)
+            .then(item => {
+              res.json({
+                status: 200,
+                orderNumber: item.orderNumber
+              })
             })
             .catch(e => console.log(e))
           break
@@ -184,6 +202,9 @@ router.post('/orders', (req, res) => {
           WinsOrder.create({
             orderNumber: orderNumber,
             price: parseInt(order.order.price),
+            discord: order.other.discord,
+            discount: order.other.discount,
+            comments: order.other.comments,
             orderType: order.order.orderType,
             queue: order.order.queue,
             useCustomChampions: order.customChampions.useChampions,
@@ -196,8 +217,11 @@ router.post('/orders', (req, res) => {
             numberOfGames: order.formOptions.rankedWins.numberOfWins,
             accountId: insertedId
           })
-            .then(() => {
-              res.sendStatus(200)
+            .then(item => {
+              res.json({
+                status: 200,
+                orderNumber: item.orderNumber
+              })
             })
             .catch(e => console.log(e))
           break
@@ -224,7 +248,8 @@ router.get('/championnames', (req, res) => {
           name: c.name,
           key: c.key,
           title: c.title,
-          icon: c.image.full
+          icon: c.image.full,
+          tags: c.tags
         }
         cReturn.push(cObj)
       })
